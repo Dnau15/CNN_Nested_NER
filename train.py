@@ -19,8 +19,7 @@ from fastNLP import TorchGradClipCallback, MoreEvaluateCallback
 from fastNLP import FitlogCallback
 from fastNLP import SortedSampler, BucketedBatchSampler
 from fastNLP import TorchWarmupCallback
-import fitlog
-# fitlog.debug()
+
 
 from model.model import CNNNer
 from model.metrics import NERMetric
@@ -65,11 +64,7 @@ ent_thres = 0.5
 kernel_size = 3
 ######hyper
 
-fitlog.set_log_dir('logs/')
-seed = fitlog.set_rng_seed(rng_seed=args.seed)
-os.environ['FASTNLP_GLOBAL_SEED'] = str(seed)
-fitlog.add_hyper(args)
-fitlog.add_hyper_in_file(__file__)
+
 
 
 @cache_results('caches/ner_caches.pkl', _refresh=False)
@@ -133,8 +128,7 @@ for name, param in model.named_parameters():
     counter[name.split('.')[0]] += torch.numel(param)
 print(counter)
 print("Total param ", sum(counter.values()))
-fitlog.add_to_line(json.dumps(counter, indent=2))
-fitlog.add_other(value=sum(counter.values()), name='total_param')
+
 
 for name, param in model.named_parameters():
     name = name.lower()
@@ -188,6 +182,5 @@ trainer = Trainer(model=model,
                   progress_bar='rich')
 
 trainer.run(num_train_batch_per_epoch=-1, num_eval_batch_per_dl=-1, num_eval_sanity_batch=1)
-fitlog.finish()
 
 
