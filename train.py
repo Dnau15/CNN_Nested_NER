@@ -100,14 +100,14 @@ for name, ds in dl.iter_datasets():
                                                     batch_size=args.batch_size))
 
     if name == 'train':
-        _dl = prepare_torch_dataloader(ds, batch_size=args.batch_size, num_workers=0,
+        _dl = prepare_torch_dataloader(ds, batch_size=args.batch_size, num_workers=4,
                                        batch_sampler=BucketedBatchSampler(ds, 'input_ids',
                                                                           batch_size=args.batch_size,
                                                                           num_batch_per_bucket=30),
                                        pin_memory=True, shuffle=True)
 
     else:
-        _dl = prepare_torch_dataloader(ds, batch_size=args.batch_size, num_workers=0,
+        _dl = prepare_torch_dataloader(ds, batch_size=args.batch_size, num_workers=4,
                                       sampler=SortedSampler(ds, 'input_ids'), pin_memory=True, shuffle=False)
     dls[name] = _dl
 
